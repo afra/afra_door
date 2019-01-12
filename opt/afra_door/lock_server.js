@@ -1,7 +1,8 @@
 // Require the keyble module
 var keyble = require("keyble");
-var http = require('http');
-var fs = require('fs');
+var http = require("http");
+var url = require("url")
+var fs = require("fs");
 
 // Create a new Key_Ble instance that represents one specific door lock
 var key_ble = new keyble.Key_Ble({
@@ -11,6 +12,8 @@ var key_ble = new keyble.Key_Ble({
 	auto_disconnect_time: 0, // After how many seconds of inactivity to auto-disconnect from the device (0 to disable)
 	status_update_time: 120 // Automatically check for status after this many seconds without status updates (0 to disable)
 });
+
+var shared_secret = fs.readFileSync("/opt/afra_door/secrets/shared_secret", "utf8")
 
 console.log("Connected to AFRA lock")
 
@@ -37,17 +40,17 @@ function unlock_door(){
 }
 
 http.createServer(function (req, res) {
-	if (req.url === "/unlock"){
-		res.write("Opening lock")
-		unlock_door()
-		res.end(); //end the response
+	var q = url.parse(req.url, true)
+
+	if (q.searchParams.get("shared_secret") === shared_secret){
+		if (q.pathname === "/unlock"){
+			res.write("Opening lock")
+			unlock_door()
+		}
+		else if (q.pathname === "/lock"){
+			res.write("Closing lock")
+			lock_door()
+		}
 	}
-	else if (req.url === "/lock"){
-		res.write("Closing lock")
-		lock_door()
-		res.end(); //end the response	
-	}
-	else{
-		res.end(); //end the response
-	}
+	res.end(); //end the response
 }).listen(8001, "127.0.0.1"); //the server object listens on port 8080
