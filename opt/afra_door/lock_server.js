@@ -40,7 +40,7 @@ function unlock_door(){
 }
 
 http.createServer(function (req, res) {
-	var q = url.parse(req.url, true)
+	var q = new url.URL("http://127.0.0.1" + req.url)
 
 	if (q.searchParams.get("shared_secret") === shared_secret){
 		if (q.pathname === "/unlock"){
@@ -51,6 +51,9 @@ http.createServer(function (req, res) {
 			res.write("Closing lock")
 			lock_door()
 		}
+	}
+	else{
+		console.log("Request rejected")
 	}
 	res.end(); //end the response
 }).listen(8001, "127.0.0.1"); //the server object listens on port 8080
