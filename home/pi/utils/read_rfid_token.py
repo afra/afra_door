@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import evdev, requests
+import evdev, requests, hashlib
 
 rfid_reader = evdev.InputDevice('/dev/input/event0')
 
@@ -16,5 +16,6 @@ for event in rfid_reader.read_loop():
 		if keys[event.code] in "0123456789":
 			current_code += keys[event.code]
 		else:
-			print(current_code)
+			md5_code = hashlib.md5(current_code.encode()).hexdigest()
+			print(current_code + " " + md5_code)
 			current_code = ""
