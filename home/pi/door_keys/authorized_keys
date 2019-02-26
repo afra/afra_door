@@ -1,0 +1,6 @@
+PUT SSH PUBLIC KEYS HERE!
+THEN USE ~/utils/deploy_keys.sh TO COPY THE FILE TO
+/home/{open,close}/.ssh/authorized_keys
+
+Example:
+ssh-ed25519 XXXXXX_SOME_PUBLIC_KEY_XXXXXX Exampleperson

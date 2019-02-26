@@ -1,0 +1,11 @@
+PUT RFID TOKEN KEYS HERE!
+THEN USE ~/utils/deploy_keys.sh TO COPY THIS FILE TO /home/open/rfid_codes.txt
+
+To get the RFID codes, use ~/utils/read_rfid_token.py and scan the token. The
+first part of the output is the code of the token, the second part is an MD5
+hash of the code.
+
+Everything that follows the key will be ignored, use this to note usernames etc.
+
+Example:
+12345678 Exampleperson
