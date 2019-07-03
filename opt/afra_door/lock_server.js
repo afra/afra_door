@@ -25,6 +25,9 @@ key_ble.on("status_change", (new_status_id, new_status_string) => {
 	current_door_status = new_status_string;
 });
 
+// Request start status
+key_ble.request_status();
+
 function status_door() {
 	return current_door_status;
 }
@@ -51,6 +54,24 @@ function unlock_door(){
 	});
 }
 
+function toggle_door() {
+	// Check status
+	if (status_door() === "UNLOCKED") {
+		console.log("Toggling door: locking...");
+		lock_door();
+	}
+	else {
+		console.log("Toggling door: unlocking...");
+		unlock_door();
+	}
+
+	// Unlock the door
+	key_ble.unlock()
+	.then( () => {
+		console.log("Door unlocked at " + Math.round((new Date()).getTime() / 1000));
+	});
+}
+
 // HTTP server on port 8001, only listening on localhost
 http.createServer(function (req, res) {
 	var q = new url.URL("http://127.0.0.1" + req.url)
@@ -63,6 +84,10 @@ http.createServer(function (req, res) {
 		else if (q.pathname === "/lock"){
 			res.write("Closing lock")
 			lock_door()
+		}
+		else if (q.pathname === "/toggle"){
+			res.write("Toggling lock (old status: " + status_door() + ")");
+			toggle_door();
 		}
 	}
 	else{

@@ -32,6 +32,6 @@ for event in rfid_reader.read_loop():
 			current_code += keys[event.code]
 		else:
 			if validate_code(current_code):
-				requests.get("http://127.0.0.1:8001/unlock?shared_secret={}".format(shared_secret))
+				requests.get("http://127.0.0.1:8001/toggle?shared_secret={}".format(shared_secret))
 			
 			current_code = ""
