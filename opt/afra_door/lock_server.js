@@ -78,15 +78,29 @@ http.createServer(function (req, res) {
 
 	if (q.searchParams.get("shared_secret") === shared_secret){
 		if (q.pathname === "/unlock"){
-			res.write("Opening lock")
+			if (status_door() === "UNLOCKED") {
+				// Status code 409 CONFLICT
+				res.statusCode = 409;
+				res.write("Door is already UNLOCKED! Try to unlock anyway...");
+			}
+			else {
+				res.write("Opening lock...")
+			}
 			unlock_door()
 		}
 		else if (q.pathname === "/lock"){
-			res.write("Closing lock")
+			if (status_door() === "LOCKED") {
+				// Status code 409 CONFLICT
+				res.statusCode = 409;
+				res.write("Door is already LOCKED! Try to lock anyway...");
+			}
+			else {
+				res.write("Closing lock...")
+			}
 			lock_door()
 		}
 		else if (q.pathname === "/toggle"){
-			res.write("Toggling lock (old status: " + status_door() + ")");
+			res.write("Toggling lock (current status: " + status_door() + ")");
 			toggle_door();
 		}
 	}
