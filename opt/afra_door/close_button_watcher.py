@@ -25,5 +25,5 @@ while True:
 	if GPIO.input(17) == 1: 
 		trigger_door_close()
 	
-	time.sleep(0.5)
+	time.sleep(0.2)
 
