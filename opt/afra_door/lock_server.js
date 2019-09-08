@@ -67,12 +67,6 @@ function toggle_door() {
 		console.log("Toggling door: unlocking...");
 		unlock_door();
 	}
-
-	// Unlock the door
-	key_ble.unlock()
-	.then( () => {
-		console.log("Door unlocked at " + Math.round((new Date()).getTime() / 1000));
-	});
 }
 
 // HTTP server on port 8001, only listening on localhost
