@@ -4,6 +4,9 @@ var http = require("http");
 var url = require("url")
 var fs = require("fs");
 
+// Increase max listeners to make the server a bit more stable regarding 'MaxListenersExceededWarning'
+require('events').EventEmitter.defaultMaxListeners = 30;
+
 // Create a new Key_Ble instance that represents one specific door lock
 var key_ble = new keyble.Key_Ble({
 	address: "00:1a:22:09:8b:d7", // The bluetooth MAC address of the door lock
