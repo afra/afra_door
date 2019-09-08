@@ -12,8 +12,8 @@ var key_ble = new keyble.Key_Ble({
 	address: "00:1a:22:09:8b:d7", // The bluetooth MAC address of the door lock
 	user_id: 1, // The user ID
 	user_key: fs.readFileSync("/opt/afra_door/secrets/user.key", "utf8"),
-	auto_disconnect_time: 0, // After how many seconds of inactivity to auto-disconnect from the device (0 to disable)
-	status_update_time: 60 // Automatically check for status after this many seconds without status updates (0 to disable)
+	auto_disconnect_time: 120, // After how many seconds of inactivity to auto-disconnect from the device (0 to disable)
+	status_update_time: 600 // Automatically check for status after this many seconds without status updates (0 to disable)
 });
 
 var shared_secret = fs.readFileSync("/opt/afra_door/secrets/shared_secret", "utf8")
@@ -37,9 +37,9 @@ function status_door() {
 
 function lock_door(){
 	ts = Math.round((new Date()).getTime() / 1000)
-	console.log("Starting polling at " + ts)
+	console.log("Lock door at" + ts)
 
-	// Unlock the door
+	// lock the door
 	key_ble.lock()
 	.then( () => {
 		console.log("Door locked at " + Math.round((new Date()).getTime() / 1000));
@@ -48,13 +48,21 @@ function lock_door(){
 
 function unlock_door(){
 	ts = Math.round((new Date()).getTime() / 1000)
-	console.log("Starting polling at " + ts)
+	console.log("Unlocking door at" + ts)
 
-	// Unlock the door
-	key_ble.unlock()
-	.then( () => {
-		console.log("Door unlocked at " + Math.round((new Date()).getTime() / 1000));
-	});
+	if (status_door() === "LOCKED") {
+		// Unlock the door
+		key_ble.unlock()
+		.then( () => {
+			console.log("Door unlocked at " + Math.round((new Date()).getTime() / 1000));
+		});
+	} else {
+		// Do an open to synchronize the door. This is only required when the door is unknown.
+		key_ble.open()
+		.then( () => {
+			console.log("Door opened at " + Math.round((new Date()).getTime() / 1000));
+		});
+	}
 }
 
 function toggle_door() {
