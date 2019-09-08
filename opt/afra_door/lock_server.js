@@ -24,7 +24,7 @@ var current_door_status = "UNKNOWN";
 
 // Listen for door status changes
 key_ble.on("status_change", (new_status_id, new_status_string) => {
-	console.log("door status changed:", new_status_string);
+	console.log("door status changed: ", new_status_string);
 	current_door_status = new_status_string;
 });
 
@@ -37,7 +37,7 @@ function status_door() {
 
 function lock_door(){
 	ts = Math.round((new Date()).getTime() / 1000)
-	console.log("Lock door at" + ts)
+	console.log("Lock door at " + ts)
 
 	// lock the door
 	key_ble.lock()
@@ -48,7 +48,7 @@ function lock_door(){
 
 function unlock_door(){
 	ts = Math.round((new Date()).getTime() / 1000)
-	console.log("Unlocking door at" + ts)
+	console.log("Unlocking door at " + ts)
 
 	if (status_door() === "LOCKED") {
 		// Unlock the door
