@@ -1,5 +1,0 @@
-Add users 'open' and 'close' with scripts from /opt as login shell:
-
-open:x:1001:1001:,,,:/home/open:/opt/afra_door/open.sh
-close:x:1002:1002:,,,:/home/close:/opt/afra_door/close.sh
-
